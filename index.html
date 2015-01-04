@@ -43,6 +43,139 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
+					<h1>My pPrivate Leaking Investigation</h1>
+					<small>„It's a mystery to me, the game commences“</small>
+				</section>
+
+				<section>
+					<h2>Application Optimizations</h2>
+					<ul>
+						<li>Code Performance</li>
+						<li>Memory optimization</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Memory Optimizations</h2>
+					<ul>
+						<li>Memory management
+							<ol>
+								<li>We may be using more memory than our App needs</li>
+								<li class="fragment" data-fragment-index="0">GC may be allocating too frequently</li>
+							</ol>
+						</li>
+						<li class="fragment" data-fragment-index="1">Memory leaks
+							<ol>
+								<li>Massive JavaScript objects may be left with references</li>
+								<li class="fragment" data-fragment-index="2">Detached DOM node trees may still have references by GC roots</li>
+							</ol>
+						</li>
+					</ul>
+				</section>
+
+				<section>
+					<section>
+						<h2>Theory</h2>
+					</section>
+
+					<section>
+						<h2>Objects sizes</h2>
+						<div>
+							<div style="float: left; width: 40%">
+								<ul>
+									<li><u>Shallow size</u> <br/>self obtained size</li>
+									<li><u>Retained size</u> <br/>consists of self size and sizes of all nodes referenced by the object</li>
+								</ul>
+							</div>
+							<div style="float: right;">
+								<img src="images/objects-sizes.png"/>
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<h2>Objects retaining tree</h2>
+						<div>
+							<div style="float: left; width: 40%">
+								<ul>
+									<li>Trees are made out of nodes (objects), interconnected by edges (objects properties)</li>
+									<li>DOM trees are native DOM elements reachable from the document root</li>
+									<li>Detached DOM trees are trees that have released all references to the document</li>
+								</ul>
+							</div>
+							<div style="float: right;">
+								<img src="images/detached-dom-tree.png"/>
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<h2>GC roots</h2>
+						<div>Objects and Node elements which have released all references to GC root are eligable to be GC-ed</div><br/>
+
+						<h3>What are GC roots?</h3>
+						<ul>
+							<li>Global object - <b>Global</b> in NodeJS / <b>window</b> in browser</li>
+							<li><b>document</b> object in the browser</li>
+							<li>Other GC roots with no interest to the developer: built-in object maps, stacks of VM threads, compilation cache, etc.</li>
+						</ul><br/><br/>
+
+						<div>We have no control from code on the GC process</div>
+					</section>
+				</section>
+
+				<section>
+					<h2>Chrome Dev Tools</h2>
+					<div>Similar tools exist for other major browsers</div><br/>
+					<ul>
+						<li class="fragment" data-fragment-index="0">Timeline - detect memory management issues and establish a baselines</li>
+						<li class="fragment" data-fragment-index="1">Profiling - explore App objects and track explicit sources for memory leaks</li>
+					</ul>
+				</section>
+
+				<section data-background="#007777">
+					<section>
+						<h2>Detecting a problem in memory management</h2>
+						<ol>
+							<li class="fragment" data-fragment-index="0">Test App with a clean environment</li>
+							<li class="fragment" data-fragment-index="1">Activate the timeline recording</li>
+							<li class="fragment" data-fragment-index="2">Choose a suspected scenario and repeat it back and forth several times while recording</li>
+							<li class="fragment" data-fragment-index="3">After each iteration, force GC by pressing the garbage-can button</li>
+							<li class="fragment" data-fragment-index="4">Wait for few seconds and stop recording</li>
+							<li class="fragment" data-fragment-index="5">analyze resulted graph</li>
+						</ol>
+					</section>
+
+					<section>
+						<h2>What is a clean environment?</h2>
+						<div>We want to isolate any unwanted references to our code that may distract us</div><br/>
+						<ul>
+							<li class="fragment" data-fragment-index="0">Open browser from the command line with <b>--nocranckshaft</b> and <b>--noopt</b> flags on</li>
+							<li class="fragment" data-fragment-index="1">Open browser in incognito mode to disable browser extensions that may add references</li>
+							<li class="fragment" data-fragment-index="2">Run App in a mode that disables console logs, as they are keeping references to the code they inspect</li> 
+							<li class="fragment" data-fragment-index="3">Run App in production mode to simulate real environment</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Some notes on timeline recording</h2>
+						<ol>
+							<li class="fragment" data-fragment-index="0">You may want to leave the recording on idle state to ensure GC. GC has it's own strategies</li>
+							<li class="fragment" data-fragment-index="1">Run in production mode but use source maps (later on that)</li>
+						</ol>
+					</section>
+				</section>
+
+
+
+
+
+
+
+
+
+
+				<section>
 					<h1>Reveal.js</h1>
 					<h3>HTML Presentations Made Easy</h3>
 					<p>
