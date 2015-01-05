@@ -121,14 +121,14 @@
 						<div class="story">Study the mafia connections</div>
 						<div>Objects and Node elements which have released all references to GC root are eligable to be GC-ed</div><br/>
 
-						<h3>What are GC roots?</h3>
+						<h3 class="fragment" data-fragment-index="0">What are GC roots?</h3>
 						<ul>
-							<li>Global object - <b>Global</b> in NodeJS / <b>window</b> in browser</li>
-							<li><b>document</b> object in the browser</li>
-							<li>Other GC roots with no interest to the developer: built-in object maps, stacks of VM threads, compilation cache, etc.</li>
+							<li class="fragment" data-fragment-index="1">Global object - <b>Global</b> in NodeJS / <b>window</b> in browser</li>
+							<li class="fragment" data-fragment-index="2"><b>document</b> object in the browser</li>
+							<li class="fragment" data-fragment-index="3">Other GC roots with no interest to the developer: built-in object maps, stacks of VM threads, compilation cache, etc.</li>
 						</ul><br/><br/>
 
-						<div>We have no control from code on the GC process</div>
+						<div class="fragment" data-fragment-index="4">We have no control from code on the GC process</div>
 					</section>
 				</section>
 
@@ -144,6 +144,7 @@
 				<section data-transition="linear" data-background="#007777" data-background-transition="slide">
 					<section>
 						<h2>Detecting a problem in memory management</h2>
+						<div class="story">Read the crime report</div>
 						<ol>
 							<li class="fragment" data-fragment-index="0">Test App with a clean environment</li>
 							<li class="fragment" data-fragment-index="1">Activate the timeline recording</li>
@@ -156,10 +157,11 @@
 
 					<section>
 						<h2>What is a clean environment?</h2>
+						<div class="story">Read between the lines</div>
 						<div>We want to isolate any unwanted references to our code that may distract us</div><br/>
 						<ul>
 							<li class="fragment" data-fragment-index="0">Open browser from the command line with <b>--nocranckshaft</b> and <b>--noopt</b> flags on</li>
-							<li class="fragment" data-fragment-index="1">Open browser in incognito mode to disable browser extensions that may add references: Batarang amongst them</li>
+							<li class="fragment" data-fragment-index="1">Open browser in incognito mode to disable browser extensions that may add references: Batarang to name one</li>
 							<li class="fragment" data-fragment-index="2">Run App in a mode that disables console logs, as they are keeping references to the code they inspect</li> 
 							<li class="fragment" data-fragment-index="3">Run App in production mode to simulate real environment</li>
 						</ul>
@@ -167,6 +169,7 @@
 
 					<section>
 						<h2>Timeline graph patterns</h2>
+						<div class="story">Analyze crime scene photos</div>
 						<div class="fragment" data-fragment-index="0">Memory get fully GC-ed</div>
 						<div class="fragment" data-fragment-index="0">
 							<img src="images/normal-memory.png"/>
@@ -179,6 +182,7 @@
 
 					<section>
 						<h2>Some notes on timeline recording</h2>
+						<div class="story"></div>
 						<ol>
 							<li class="fragment" data-fragment-index="0">GC has it's own strategies. You may want to leave the recording on idle state for few minutes to ensure GC</li>
 							<li class="fragment" data-fragment-index="1">Run App in production mode to simulate real environment</li>
@@ -189,6 +193,7 @@
 				<section data-transition="linear" data-background="#8c4738" data-background-transition="slide">
 					<section>
 						<h2>Detecting memory leaks causes</h2>
+						<div class="story">Pinpointing and arrest plan</div>
 						<ol>
 							<li class="fragment" data-fragment-index="0">Test App with a clean environment</li>
 							<li class="fragment" data-fragment-index="1">Choose a suspected scenraio</li>
@@ -205,6 +210,7 @@
 
 					<section>
 						<h2>Analyzing results</h2>
+						<div class="story">Interrogate suspects</div>
 						<ul>
 							<li class="fragment" data-fragment-index="0">Retaining tree is a reverse pyramid of references</li>
 							<li class="fragment" data-fragment-index="1">Entries with red background - Detached elements</li>
@@ -218,8 +224,9 @@
 
 					<section>
 						<h2>Fixing and validating</h2>
+						<div class="story">Bring'em to trial</div>
 						<ul>
-							<li class="fragment" data-fragment-index="0">Recognize your place in code using clues from the retaining tree. Issue should be around the yellow entry</li>
+							<li class="fragment" data-fragment-index="0">Recognize your place in code using clues from the retaining tree. Issue should be somewhere between the red and the yellow entries</li>
 							<li class="fragment" data-fragment-index="1">Review suspected code</li>
 							<li class="fragment" data-fragment-index="2">Release DOM tree in code</li>
 							<li class="fragment" data-fragment-index="3">Repeat detection steps to see if problem solved</li>
@@ -227,18 +234,19 @@
 
 					<section>
 						<h2>Some notes on profiling</h2>
+						<div class="story">Debriefing</div>
 						<ol>
 							<li class="fragment" data-fragment-index="0">Each snapshot starts with a garbage collecting. No need to force it</li>
 							<li class="fragment" data-fragment-index="1">Name closure functions. They will help you get around the retaining tree<br/>
 								<img src="images/named-closure-function.png" />
 							</li>
-							<li class="fragment" data-fragment-index="2">Run in production mode but use source maps</li>
 						</ol>
 					</section>
 				</section>
 
 				<section>
 					<h2>Memory leaks in SPA</h2>
+					<div class="story">Transfering to the big city</div>
 					<ul>
 						<li class="fragment" data-fragment-index="0">Complexity of code and coponents</li>
 						<li class="fragment" data-fragment-index="1">Multi develpers environment</li>
@@ -249,6 +257,7 @@
 
 				<section>
 					<h2>AngularJS - areas of interest</h2>
+					<div class="story">Neighborhoods to watch</div>
 					<ul>
 						<li class="fragment" data-fragment-index="0">DOM manipulations in controllers (that's a no-no)</li>
 						<li class="fragment" data-fragment-index="1">Regular object growth - easy to track</li>
@@ -260,11 +269,13 @@
 				<section data-transition="linear" data-background="#33aa22" data-background-transition="slide">
 					<section>
 						<h2>Memory leaks in Angular.JS directives</h2>
+						<div class="story">The real deal</div>
 						<h3>What we should do when scope has to die</h3>
 					</section>
 
 					<section>
 						<h2>Directives - release event listeners</h2>
+						<div class="story">First arrest</div>
 						<ul>
 							<li>Unbind any event listeners that are registered on DOM elements, global objects or inside closure</li>
 							<li>Use scope $destroy event which is broadcasted prior to scope destruction</li>
@@ -290,6 +301,7 @@ function johnGottiDirective () {
 
 					<section>
 						<h2>Directives - release DOM trees</h2>
+						<div class="story">Second arrest</div>
 						<ul>
 							<li>Release any reference to detached DOM trees</li>
 							<li>Use scope $destroy event which is broadcasted prior to scope destruction</li>
@@ -319,6 +331,7 @@ function alCaponeDirective () {
 
 					<section>
 						<h2>Directives - stop any running interval</h2>
+						<div class="story">Third arrest</div>
 						<ul>
 							<li>If using <code>setInterval</code>, release on $destroy event</li>
 							<li>Use of $interval service does not save you the manual destruction of the interval</li>
@@ -343,6 +356,7 @@ function tedBundyDirective ($interval) {
 
 					<section>
 						<h2>Directives - elements created with jQuery</h2>
+						<div class="story">Forth arrest</div>
 						<ul>
 							<li>Should be removed with jQuery alone</li>
 							<li>Removing with DOM api, will leave jQuery cache object in memory</li>
@@ -353,7 +367,7 @@ function leeHarveyOswaldDirective () {
 	var bullet;
 
     return function (scope, element, attrs) {
-    	bullet = angular.element('<bullet>');
+    	bullet = angular.element('&lt;bullet&gt;');
 
     	// shoot
 
@@ -372,6 +386,7 @@ function leeHarveyOswaldDirective () {
 				<section data-transition="linear" data-background="#224488" data-background-transition="slide">
 					<section>
 						<h2>Surprising profiling results</h2>
+						<div class="story">Another suspect</div>
 						<ul>
 							<li>ng-if directive</li>
 							<li>ng-switch directive</li>
