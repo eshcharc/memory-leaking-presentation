@@ -16,6 +16,7 @@
 
 		<link rel="stylesheet" href="css/reveal.min.css">
 		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+		<link rel="stylesheet" href="css/styles.css">
 
 		<!-- For syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -43,12 +44,14 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
-					<h1>My pPrivate Leaking Investigation</h1>
-					<small>„It's a mystery to me, the game commences“</small>
+					<h1>My Private Leaking Investigation</h1>
+					<small>„It's a mystery to me, the game commences“</small><br/><br/>
+					<img src="images/detective.png" style="margin:0; background: none; border: none; box-shadow: none;" />
 				</section>
 
 				<section>
 					<h2>Application Optimizations</h2>
+					<div class="story">Get to know the police force</div>
 					<ul>
 						<li>Code Performance</li>
 						<li>Memory optimization</li>
@@ -57,17 +60,18 @@
 
 				<section>
 					<h2>Memory Optimizations</h2>
+					<div class="story">Get to know your department</div>
 					<ul>
-						<li>Memory management
+						<li class="fragment" data-fragment-index="0">Memory management
 							<ol>
-								<li>We may be using more memory than our App needs</li>
-								<li class="fragment" data-fragment-index="0">GC may be allocating too frequently</li>
+								<li class="fragment" data-fragment-index="1">We may be using more memory than our App needs</li>
+								<li class="fragment" data-fragment-index="2">GC may be allocating too frequently</li>
 							</ol>
 						</li>
-						<li class="fragment" data-fragment-index="1">Memory leaks
+						<li class="fragment" data-fragment-index="3">Memory leaks
 							<ol>
-								<li>Massive JavaScript objects may be left with references</li>
-								<li class="fragment" data-fragment-index="2">Detached DOM node trees may still have references by GC roots</li>
+								<li class="fragment" data-fragment-index="4">Massive JavaScript objects may be left with references</li>
+								<li class="fragment" data-fragment-index="5">Detached DOM node trees may still have references by GC roots</li>
 							</ol>
 						</li>
 					</ul>
@@ -76,18 +80,20 @@
 				<section>
 					<section>
 						<h2>Theory</h2>
+						<div class="story">Short detective course</div>
 					</section>
 
 					<section>
 						<h2>Objects sizes</h2>
+						<div class="story">Study the mafia heirarchy</div>
 						<div>
 							<div style="float: left; width: 40%">
 								<ul>
-									<li><u>Shallow size</u> <br/>self obtained size</li>
-									<li><u>Retained size</u> <br/>consists of self size and sizes of all nodes referenced by the object</li>
+									<li class="fragment" data-fragment-index="0"><u>Shallow size</u> <br/>self obtained size</li>
+									<li class="fragment" data-fragment-index="1"><u>Retained size</u> <br/>consists of self size and sizes of all nodes referenced by the object</li>
 								</ul>
 							</div>
-							<div style="float: right;">
+							<div style="float: right;" class="fragment" data-fragment-index="0">
 								<img src="images/objects-sizes.png"/>
 							</div>
 						</div>
@@ -95,15 +101,16 @@
 
 					<section>
 						<h2>Objects retaining tree</h2>
+						<div class="story">Bring down the boss and they will all fall</div>
 						<div>
 							<div style="float: left; width: 40%">
 								<ul>
-									<li>Trees are made out of nodes (objects), interconnected by edges (objects properties)</li>
-									<li>DOM trees are native DOM elements reachable from the document root</li>
-									<li>Detached DOM trees are trees that have released all references to the document</li>
+									<li class="fragment" data-fragment-index="0">Trees are made out of nodes (objects), interconnected by edges (objects properties)</li>
+									<li class="fragment" data-fragment-index="1">DOM trees are native DOM elements reachable from the document root</li>
+									<li class="fragment" data-fragment-index="2">Detached DOM trees are trees that have released all references to the document</li>
 								</ul>
 							</div>
-							<div style="float: right;">
+							<div style="float: right;" class="fragment" data-fragment-index="0">
 								<img src="images/detached-dom-tree.png"/>
 							</div>
 						</div>
@@ -111,6 +118,7 @@
 
 					<section>
 						<h2>GC roots</h2>
+						<div class="story">Study the mafia connections</div>
 						<div>Objects and Node elements which have released all references to GC root are eligable to be GC-ed</div><br/>
 
 						<h3>What are GC roots?</h3>
@@ -126,14 +134,14 @@
 
 				<section>
 					<h2>Chrome Dev Tools</h2>
-					<div>Similar tools exist for other major browsers</div><br/>
+					<div class="story">Let's get equipped</div>
 					<ul>
-						<li class="fragment" data-fragment-index="0">Timeline - detect memory management issues and establish a baselines</li>
+						<li class="fragment" data-fragment-index="0">Timeline - detect memory management issues</li>
 						<li class="fragment" data-fragment-index="1">Profiling - explore App objects and track explicit sources for memory leaks</li>
 					</ul>
 				</section>
 
-				<section data-background="#007777">
+				<section data-transition="linear" data-background="#007777" data-background-transition="slide">
 					<section>
 						<h2>Detecting a problem in memory management</h2>
 						<ol>
@@ -151,274 +159,248 @@
 						<div>We want to isolate any unwanted references to our code that may distract us</div><br/>
 						<ul>
 							<li class="fragment" data-fragment-index="0">Open browser from the command line with <b>--nocranckshaft</b> and <b>--noopt</b> flags on</li>
-							<li class="fragment" data-fragment-index="1">Open browser in incognito mode to disable browser extensions that may add references</li>
+							<li class="fragment" data-fragment-index="1">Open browser in incognito mode to disable browser extensions that may add references: Batarang amongst them</li>
 							<li class="fragment" data-fragment-index="2">Run App in a mode that disables console logs, as they are keeping references to the code they inspect</li> 
 							<li class="fragment" data-fragment-index="3">Run App in production mode to simulate real environment</li>
 						</ul>
 					</section>
 
 					<section>
+						<h2>Timeline graph patterns</h2>
+						<div class="fragment" data-fragment-index="0">Memory get fully GC-ed</div>
+						<div class="fragment" data-fragment-index="0">
+							<img src="images/normal-memory.png"/>
+						</div>
+						<div class="fragment" data-fragment-index="1">Potential memory leak</div>
+						<div class="fragment" data-fragment-index="1">
+							<img src="images/memory-leak-graph.png"/>
+						</div>
+					</section>
+
+					<section>
 						<h2>Some notes on timeline recording</h2>
 						<ol>
-							<li class="fragment" data-fragment-index="0">You may want to leave the recording on idle state to ensure GC. GC has it's own strategies</li>
-							<li class="fragment" data-fragment-index="1">Run in production mode but use source maps (later on that)</li>
+							<li class="fragment" data-fragment-index="0">GC has it's own strategies. You may want to leave the recording on idle state for few minutes to ensure GC</li>
+							<li class="fragment" data-fragment-index="1">Run App in production mode to simulate real environment</li>
 						</ol>
 					</section>
 				</section>
 
-
-
-
-
-
-
-
-
-
-				<section>
-					<h1>Reveal.js</h1>
-					<h3>HTML Presentations Made Easy</h3>
-					<p>
-						<small>Created by <a href="http://hakim.se">Hakim El Hattab</a> / <a href="http://twitter.com/hakimel">@hakimel</a></small>
-					</p>
-				</section>
-
-				<section>
-					<h2>Heads Up</h2>
-					<p>
-						reveal.js is a framework for easily creating beautiful presentations using HTML. You'll need a browser with
-						support for CSS 3D transforms to see it in its full glory.
-					</p>
-
-					<aside class="notes">
-						Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
-					</aside>
-				</section>
-
-				<!-- Example of nested vertical slides -->
-				<section>
+				<section data-transition="linear" data-background="#8c4738" data-background-transition="slide">
 					<section>
-						<h2>Vertical Slides</h2>
-						<p>
-							Slides can be nested inside of other slides,
-							try pressing <a href="#" class="navigate-down">down</a>.
-						</p>
-						<a href="#" class="image navigate-down">
-							<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-						</a>
+						<h2>Detecting memory leaks causes</h2>
+						<ol>
+							<li class="fragment" data-fragment-index="0">Test App with a clean environment</li>
+							<li class="fragment" data-fragment-index="1">Choose a suspected scenraio</li>
+							<li class="fragment" data-fragment-index="2">Take a heap snapshot</li>
+							<li class="fragment" data-fragment-index="3">Make the steps of the scenario</li>
+							<li class="fragment" data-fragment-index="4">Take another snapshot</li>
+							<li class="fragment" data-fragment-index="5">Make the scenario reverse actions</li>
+							<li class="fragment" data-fragment-index="6">Take a last snapshot</li>
+							<li class="fragment" data-fragment-index="7">Switch to comparison mode and compare first and last snapshots</li>
+							<li class="fragment" data-fragment-index="8">Filter results to show detached DOM trees</li>
+							<li class="fragment" data-fragment-index="9">Analyze results</li>
+						</ol>
 					</section>
+
 					<section>
-						<h2>Basement Level 1</h2>
-						<p>Press down or up to navigate.</p>
+						<h2>Analyzing results</h2>
+						<ul>
+							<li class="fragment" data-fragment-index="0">Retaining tree is a reverse pyramid of references</li>
+							<li class="fragment" data-fragment-index="1">Entries with red background - Detached elements</li>
+							<li class="fragment" data-fragment-index="2">Entries with yellow background further up the retaining tree - objects with a reference to GC root</li>
+							<li class="fragment" data-fragment-index="3">Distance column - distance to root</li> 
+						</ul><br/><br/>
+						<div>
+							<img src="images/rataining-tree.png" style="height: 300px;" />
+						</div>
 					</section>
+
 					<section>
-						<h2>Basement Level 2</h2>
-						<p>Cornify</p>
-						<a class="test" href="http://cornify.com">
-							<img width="280" height="326" src="https://s3.amazonaws.com/hakim-static/reveal-js/cornify.gif" alt="Unicorn">
-						</a>
+						<h2>Fixing and validating</h2>
+						<ul>
+							<li class="fragment" data-fragment-index="0">Recognize your place in code using clues from the retaining tree. Issue should be around the yellow entry</li>
+							<li class="fragment" data-fragment-index="1">Review suspected code</li>
+							<li class="fragment" data-fragment-index="2">Release DOM tree in code</li>
+							<li class="fragment" data-fragment-index="3">Repeat detection steps to see if problem solved</li>
 					</section>
+
 					<section>
-						<h2>Basement Level 3</h2>
-						<p>That's it, time to go back up.</p>
-						<a href="#/2" class="image">
-							<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Up arrow" style="-webkit-transform: rotate(180deg);">
-						</a>
+						<h2>Some notes on profiling</h2>
+						<ol>
+							<li class="fragment" data-fragment-index="0">Each snapshot starts with a garbage collecting. No need to force it</li>
+							<li class="fragment" data-fragment-index="1">Name closure functions. They will help you get around the retaining tree<br/>
+								<img src="images/named-closure-function.png" />
+							</li>
+							<li class="fragment" data-fragment-index="2">Run in production mode but use source maps</li>
+						</ol>
 					</section>
 				</section>
 
 				<section>
-					<h2>Slides</h2>
-					<p>
-						Not a coder? No problem. There's a fully-featured visual editor for authoring these, try it out at <a href="http://slid.es" target="_blank">http://slid.es</a>.
-					</p>
-				</section>
-
-				<section>
-					<h2>Point of View</h2>
-					<p>
-						Press <strong>ESC</strong> to enter the slide overview.
-					</p>
-					<p>
-						Hold down alt and click on any element to zoom in on it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Alt + click anywhere to zoom back out.
-					</p>
-				</section>
-
-				<section>
-					<h2>Works in Mobile Safari</h2>
-					<p>
-						Try it out! You can swipe through the slides and pinch your way to the overview.
-					</p>
-				</section>
-
-				<section>
-					<h2>Marvelous Unordered List</h2>
+					<h2>Memory leaks in SPA</h2>
 					<ul>
-						<li>No order here</li>
-						<li>Or here</li>
-						<li>Or here</li>
-						<li>Or here</li>
+						<li class="fragment" data-fragment-index="0">Complexity of code and coponents</li>
+						<li class="fragment" data-fragment-index="1">Multi develpers environment</li>
+						<li class="fragment" data-fragment-index="2">Application may run days before refreshing the page</li> 
+						<li class="fragment" data-fragment-index="3">Detached application sections (ng-if)</li>
 					</ul>
 				</section>
 
 				<section>
-					<h2>Fantastic Ordered List</h2>
-					<ol>
-						<li>One is smaller than...</li>
-						<li>Two is smaller than...</li>
-						<li>Three!</li>
-					</ol>
+					<h2>AngularJS - areas of interest</h2>
+					<ul>
+						<li class="fragment" data-fragment-index="0">DOM manipulations in controllers (that's a no-no)</li>
+						<li class="fragment" data-fragment-index="1">Regular object growth - easy to track</li>
+						<li class="fragment" data-fragment-index="2">Angular "normal" detached DOM trees (ng-if, ng-include, ng-switch, etc.)</li>
+						<li class="fragment" data-fragment-index="3">Memory leaks in directives - our main interest</li>
+					</ul>
 				</section>
 
-				<section data-markdown>
-					<script type="text/template">
-						## Markdown support
-
-						For those of you who like that sort of thing. Instructions and a bit more info available [here](https://github.com/hakimel/reveal.js#markdown).
-
-						```
-						<section data-markdown>
-						  ## Markdown support
-
-						  For those of you who like that sort of thing.
-						  Instructions and a bit more info available [here](https://github.com/hakimel/reveal.js#markdown).
-						</section>
-						```
-					</script>
-				</section>
-
-				<section id="transitions">
-					<h2>Transition Styles</h2>
-					<p>
-						You can select from different transitions, like: <br>
-						<a href="?transition=cube#/transitions">Cube</a> -
-						<a href="?transition=page#/transitions">Page</a> -
-						<a href="?transition=concave#/transitions">Concave</a> -
-						<a href="?transition=zoom#/transitions">Zoom</a> -
-						<a href="?transition=linear#/transitions">Linear</a> -
-						<a href="?transition=fade#/transitions">Fade</a> -
-						<a href="?transition=none#/transitions">None</a> -
-						<a href="?#/transitions">Default</a>
-					</p>
-				</section>
-
-				<section id="themes">
-					<h2>Themes</h2>
-					<p>
-						Reveal.js comes with a few themes built in: <br>
-						<a href="?#/themes">Default</a> -
-						<a href="?theme=sky#/themes">Sky</a> -
-						<a href="?theme=beige#/themes">Beige</a> -
-						<a href="?theme=simple#/themes">Simple</a> -
-						<a href="?theme=serif#/themes">Serif</a> -
-						<a href="?theme=night#/themes">Night</a> <br>
-						<a href="?theme=moon#/themes">Moon</a> -
-						<a href="?theme=solarized#/themes">Solarized</a>
-					</p>
-					<p>
-						<small>
-							* Theme demos are loaded after the presentation which leads to flicker. In production you should load your theme in the <code>&lt;head&gt;</code> using a <code>&lt;link&gt;</code>.
-						</small>
-					</p>
-				</section>
-
-				<section>
-					<h2>Global State</h2>
-					<p>
-						Set <code>data-state="something"</code> on a slide and <code>"something"</code>
-						will be added as a class to the document element when the slide is open. This lets you
-						apply broader style changes, like switching the background.
-					</p>
-				</section>
-
-				<section data-state="customevent">
-					<h2>Custom Events</h2>
-					<p>
-						Additionally custom events can be triggered on a per slide basis by binding to the <code>data-state</code> name.
-					</p>
-					<pre><code data-trim contenteditable style="font-size: 18px; margin-top: 20px;">
-Reveal.addEventListener( 'customevent', function() {
-	console.log( '"customevent" has fired' );
-} );
-					</code></pre>
-				</section>
-
-				<section>
-					<section data-background="#007777">
-						<h2>Slide Backgrounds</h2>
-						<p>
-							Set <code>data-background="#007777"</code> on a slide to change the full page background to the given color. All CSS color formats are supported.
-						</p>
-						<a href="#" class="image navigate-down">
-							<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-						</a>
+				<section data-transition="linear" data-background="#33aa22" data-background-transition="slide">
+					<section>
+						<h2>Memory leaks in Angular.JS directives</h2>
+						<h3>What we should do when scope has to die</h3>
 					</section>
-					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png">
-						<h2>Image Backgrounds</h2>
-						<pre><code>&lt;section data-background="image.png"&gt;</code></pre>
-					</section>
-					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" data-background-repeat="repeat" data-background-size="100px">
-						<h2>Repeated Image Backgrounds</h2>
-						<pre><code style="word-wrap: break-word;">&lt;section data-background="image.png" data-background-repeat="repeat" data-background-size="100px"&gt;</code></pre>
-					</section>
-				</section>
 
-				<section data-transition="linear" data-background="#4d7e65" data-background-transition="slide">
-					<h2>Background Transitions</h2>
-					<p>
-						Pass reveal.js the <code>backgroundTransition: 'slide'</code> config argument to make backgrounds slide rather than fade.
-					</p>
-				</section>
+					<section>
+						<h2>Directives - release event listeners</h2>
+						<ul>
+							<li>Unbind any event listeners that are registered on DOM elements, global objects or inside closure</li>
+							<li>Use scope $destroy event which is broadcasted prior to scope destruction</li>
+						</ul>
+						<pre>
+							<code data-trim contenteditable>
+function johnGottiDirective () {
+    return function (scope, element, attrs) {
+    	function stealMerchandise() {
+			// Do some stealling
+		}
 
-				<section data-transition="linear" data-background="#8c4738" data-background-transition="slide">
-					<h2>Background Transition Override</h2>
-					<p>
-						You can override background transitions per slide by using <code>data-background-transition="slide"</code>.
-					</p>
-				</section>
+    	element.on('click', stealMerchandise);
 
-				<section>
-					<h2>Clever Quotes</h2>
-					<p>
-						These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						&ldquo;The nice thing about standards is that there are so many to choose from&rdquo;</q> and block:
-					</p>
-					<blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						&ldquo;For years there has been a theory that millions of monkeys typing at random on millions of typewriters would
-						reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.&rdquo;
-					</blockquote>
-				</section>
-
-				<section>
-					<h2>Pretty Code</h2>
-					<pre><code data-trim contenteditable>
-function linkify( selector ) {
-  if( supports3DTransforms ) {
-
-    var nodes = document.querySelectorAll( selector );
-
-    for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
-      var node = nodes[i];
-
-      if( !node.className ) {
-        node.className += ' roll';
-      }
-    }
-  }
+    	scope.$on('$destroy', function arrestJohnGotti() {
+    		element.off('click', stealMerchandise);
+    	})
+    };
 }
-					</code></pre>
-					<p>Courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
+							</code>
+						</pre>
+					</section>
+
+					<section>
+						<h2>Directives - release DOM trees</h2>
+						<ul>
+							<li>Release any reference to detached DOM trees</li>
+							<li>Use scope $destroy event which is broadcasted prior to scope destruction</li>
+						</ul>
+						<pre>
+							<code data-trim contenteditable>
+function alCaponeDirective () {
+	var treasure = [];
+
+    return function (scope, element, attrs) {
+    	function storeRobbedMoney(robbery) {
+			treasure.push(robbery)
+		}
+
+    	angular.forEach(element.children('.robbery'), function (robbery) {
+    		storeRobbedMoney(robbery);
+    	});
+
+    	scope.$on('$destroy', function findAlCaponeTreasure() {
+    		treasue = null;
+    	})
+    };
+}
+							</code>
+						</pre>
+					</section>
+
+					<section>
+						<h2>Directives - stop any running interval</h2>
+						<ul>
+							<li>If using <code>setInterval</code>, release on $destroy event</li>
+							<li>Use of $interval service does not save you the manual destruction of the interval</li>
+						</ul>
+						<pre>
+							<code data-trim contenteditable>
+function tedBundyDirective ($interval) {
+
+    return function (scope, element, attrs) {
+    	var killingInterval = $interval(function kill(robbery) {
+			// kill
+		});
+
+    	scope.$on('$destroy', function arrestTedBundy() {
+    		$interval.cancel(killingInterval);
+    	})
+    };
+}
+							</code>
+						</pre>
+					</section>
+
+					<section>
+						<h2>Directives - elements created with jQuery</h2>
+						<ul>
+							<li>Should be removed with jQuery alone</li>
+							<li>Removing with DOM api, will leave jQuery cache object in memory</li>
+						</ul>
+						<pre>
+							<code data-trim contenteditable>
+function leeHarveyOswaldDirective () {
+	var bullet;
+
+    return function (scope, element, attrs) {
+    	bullet = angular.element('<bullet>');
+
+    	// shoot
+
+    	scope.$on('$destroy', function arrestLeeHarvey() {
+    		bullet.remove();
+    		bullet = null;
+    	})
+    };
+}
+							</code>
+						</pre>
+					</section>
+				</section>
+
+
+				<section data-transition="linear" data-background="#224488" data-background-transition="slide">
+					<section>
+						<h2>Surprising profiling results</h2>
+						<ul>
+							<li>ng-if directive</li>
+							<li>ng-switch directive</li>
+							<li>ng-include directive</li>
+						</ul><br/><br/>
+						<div class="fragment" data-fragment-index="0">All of the above are not memory leaks but may be optimized</div>
+					</section>
+					
 				</section>
 
 				<section>
-					<h2>Intergalactic Interconnections</h2>
-					<p>
-						You can link between slides internally,
-						<a href="#/2/3">like this</a>.
-					</p>
+					<section>
+						<h2>Thank you!</h2>
+						<ul>
+							<li>Presentation slides online: <a href="http://slides.com/eshcharc/private-leaking-investigation">http://slides.com/eshcharc/private-leaking-investigation</a></li>
+							<li>Memory leaking playground (crime scene): <a href="https://github.com/eshcharc/private-leaking-investigation">https://github.com/eshcharc/private-leaking-investigation</a></li>
+							<li>Questions: <a href="mailto:eshcharc@gmail.com">eshcharc@gmail.com</a></li>
+						</ul><br/><br/>
+						
+					</section>
+					
 				</section>
 
-				<section>
+
+
+
+		
+
+				<!-- <section>
 					<section id="fragments">
 						<h2>Fragmented Views</h2>
 						<p>Hit the next arrow...</p>
@@ -446,46 +428,7 @@ function linkify( selector ) {
 						<p class="fragment current-visible">current-visible</p>
 						<p class="fragment highlight-current-blue">highlight-current-blue</p>
 					</section>
-				</section>
-
-				<section>
-					<h2>Spectacular image!</h2>
-					<a class="image" href="http://lab.hakim.se/meny/" target="_blank">
-						<img width="320" height="299" src="http://s3.amazonaws.com/hakim-static/portfolio/images/meny.png" alt="Meny">
-					</a>
-				</section>
-
-				<section>
-					<h2>Export to PDF</h2>
-					<p>Presentations can be <a href="https://github.com/hakimel/reveal.js#pdf-export">exported to PDF</a>, below is an example that's been uploaded to SlideShare.</p>
-					<iframe id="slideshare" src="http://www.slideshare.net/slideshow/embed_code/13872948" width="455" height="356" style="margin:0;overflow:hidden;border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe>
-					<script>
-						document.getElementById('slideshare').attributeName = 'allowfullscreen';
-					</script>
-				</section>
-
-				<section>
-					<h2>Take a Moment</h2>
-					<p>
-						Press b or period on your keyboard to enter the 'paused' mode. This mode is helpful when you want to take distracting slides off the screen
-						during a presentation.
-					</p>
-				</section>
-
-				<section>
-					<h2>Stellar Links</h2>
-					<ul>
-						<li><a href="http://slid.es">Try the online editor</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js">Source code on GitHub</a></li>
-						<li><a href="http://twitter.com/hakimel">Follow me on Twitter</a></li>
-					</ul>
-				</section>
-
-				<section>
-					<h1>THE END</h1>
-					<h3>BY Hakim El Hattab / hakim.se</h3>
-				</section>
-
+				</section> -->
 			</div>
 
 		</div>
