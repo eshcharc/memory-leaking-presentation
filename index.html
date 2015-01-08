@@ -16,7 +16,7 @@
 
 		<link rel="stylesheet" href="css/reveal.min.css">
 		<link rel="stylesheet" href="css/theme/default.css" id="theme">
-		<link rel="stylesheet" href="css/styles.css">
+		<link rel="shortcut icon" href="favicon.ico" />
 
 		<!-- For syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -31,6 +31,19 @@
 				document.getElementsByTagName( 'head' )[0].appendChild( link );
 			}
 		</script>
+
+		<style>
+			.story {
+				color: #ff2255;
+				position: relative;
+				top: -25px;
+				font-size: 30px !important;
+			}
+
+			.bright {
+				color: cyan;
+			}
+		</style>
 
 		<!--[if lt IE 9]>
 		<script src="lib/js/html5shiv.js"></script>
@@ -64,17 +77,58 @@
 					<ul>
 						<li class="fragment" data-fragment-index="0">Memory management
 							<ol>
-								<li class="fragment" data-fragment-index="1">We may be using more memory than our App needs</li>
+								<li class="fragment" data-fragment-index="1">Using more memory than our App needs</li>
 								<li class="fragment" data-fragment-index="2">GC may be allocating too frequently</li>
 							</ol>
 						</li>
 						<li class="fragment" data-fragment-index="3">Memory leaks
 							<ol>
-								<li class="fragment" data-fragment-index="4">Massive JavaScript objects may be left with references</li>
-								<li class="fragment" data-fragment-index="5">Detached DOM node trees may still have references by GC roots</li>
+								<li class="fragment" data-fragment-index="4">Massive JavaScript objects</li>
+								<li class="fragment" data-fragment-index="5">Detached DOM node</li>
 							</ol>
 						</li>
 					</ul>
+				</section>
+
+				<section>
+					<section>
+						<h2>How do I know I have a problem?</h2>
+						<div class="story">How bad is it?</div>
+						<div>
+							<div>
+								I get this when playing around with the application
+							</div><br/>
+							<div>
+								<img src="images/chrome-crash.png" style="height: 350px;"/>
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<h2>How do I know I have a problem?</h2>
+						<div class="story">How bad is it?</div>
+						<div>
+							<div>
+								Application frequently halts for several seconds
+							</div><br/>
+							<div>
+								<img src="images/saw-touth.png" style="height: 350px;"/>
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<h2>How do I know I have a problem?</h2>
+						<div class="story">How bad is it?</div>
+						<div>
+							<div>
+								Boss instructs you to check for memory leaks 
+							</div><br/>
+							<div>
+								<img src="images/instructs.jpg" style="height: 350px;"/>
+							</div>
+						</div>
+					</section>
 				</section>
 
 				<section>
@@ -90,7 +144,7 @@
 							<div style="float: left; width: 40%">
 								<ul>
 									<li class="fragment" data-fragment-index="0"><u>Shallow size</u> <br/>self obtained size</li>
-									<li class="fragment" data-fragment-index="1"><u>Retained size</u> <br/>consists of self size and sizes of all nodes referenced by the object</li>
+									<li class="fragment" data-fragment-index="1"><u>Retained size</u> <br/>Self size + Size of all obtained objects</li>
 								</ul>
 							</div>
 							<div style="float: right;" class="fragment" data-fragment-index="0">
@@ -103,11 +157,11 @@
 						<h2>Objects retaining tree</h2>
 						<div class="story">Bring down the boss and they will all fall</div>
 						<div>
-							<div style="float: left; width: 40%">
+							<div style="float: left; width: 45%">
 								<ul>
-									<li class="fragment" data-fragment-index="0">Trees are made out of nodes (objects), interconnected by edges (objects properties)</li>
-									<li class="fragment" data-fragment-index="1">DOM trees are native DOM elements reachable from the document root</li>
-									<li class="fragment" data-fragment-index="2">Detached DOM trees are trees that have released all references to the document</li>
+									<li class="fragment" data-fragment-index="0">Trees = Nodes (objects) +  Edges (properties)</li>
+									<li class="fragment" data-fragment-index="1">DOM trees - reachable from the document root</li>
+									<li class="fragment" data-fragment-index="2">Detached DOM trees - released all references to the document</li>
 								</ul>
 							</div>
 							<div style="float: right;" class="fragment" data-fragment-index="0">
@@ -117,18 +171,19 @@
 					</section>
 
 					<section>
-						<h2>GC roots</h2>
+						<h2>What are GC roots?</h2>
 						<div class="story">Study the mafia connections</div>
-						<div>Objects and Node elements which have released all references to GC root are eligable to be GC-ed</div><br/>
 
-						<h3 class="fragment" data-fragment-index="0">What are GC roots?</h3>
 						<ul>
-							<li class="fragment" data-fragment-index="1">Global object - <b>Global</b> in NodeJS / <b>window</b> in browser</li>
-							<li class="fragment" data-fragment-index="2"><b>document</b> object in the browser</li>
-							<li class="fragment" data-fragment-index="3">Other GC roots with no interest to the developer: built-in object maps, stacks of VM threads, compilation cache, etc.</li>
+							<li class="fragment" data-fragment-index="1">Global object
+							<li class="fragment" data-fragment-index="2"><b>Document</b> object</li>
+							<li class="fragment" data-fragment-index="3">Other GC roots</li>
 						</ul><br/><br/>
-
-						<div class="fragment" data-fragment-index="4">We have no control from code on the GC process</div>
+						<div class="fragment" data-fragment-index="4"><u>Notes</u></div>
+						<ul class="fragment" data-fragment-index="4">
+							<li>Released objects - eligable to be GC-ed</li>
+							<li>No control from code on the GC process</li>
+						</ul>
 					</section>
 				</section>
 
@@ -136,28 +191,29 @@
 					<h2>Chrome Dev Tools</h2>
 					<div class="story">Let's get equipped</div>
 					<ul>
-						<li class="fragment" data-fragment-index="0">Timeline - detect memory management issues</li>
-						<li class="fragment" data-fragment-index="1">Profiling - explore App objects and track explicit sources for memory leaks</li>
+						<li class="fragment" data-fragment-index="0">Timeline - visual estimation</li>
+						<li class="fragment" data-fragment-index="1">Heap snapshot - snapshots of live objects</li>
+						<li class="fragment" data-fragment-index="2">Record heap allocation - objects allocations over time</li>
 					</ul>
 				</section>
 
 				<section data-transition="linear" data-background="#007777" data-background-transition="slide">
 					<section>
 						<h2>Detecting a problem in memory management</h2>
-						<div class="story">Read the crime report</div>
+						<div class="story bright">Read the crime report</div>
 						<ol>
 							<li class="fragment" data-fragment-index="0">Test App with a clean environment</li>
 							<li class="fragment" data-fragment-index="1">Activate the timeline recording</li>
-							<li class="fragment" data-fragment-index="2">Choose a suspected scenario and repeat it back and forth several times while recording</li>
-							<li class="fragment" data-fragment-index="3">After each iteration, force GC by pressing the garbage-can button</li>
-							<li class="fragment" data-fragment-index="4">Wait for few seconds and stop recording</li>
+							<li class="fragment" data-fragment-index="2">Repeat a suspected scenario back and forth</li>
+							<li class="fragment" data-fragment-index="3">Force GC</li>
+							<li class="fragment" data-fragment-index="4">Wait and stop recording</li>
 							<li class="fragment" data-fragment-index="5">analyze resulted graph</li>
 						</ol>
 					</section>
 
 					<section>
 						<h2>What is a clean environment?</h2>
-						<div class="story">Read between the lines</div>
+						<div class="story bright">Read between the lines</div>
 						<div>We want to isolate any unwanted references to our code that may distract us</div><br/>
 						<ul>
 							<li class="fragment" data-fragment-index="0">Open browser from the command line with <b>--nocranckshaft</b> and <b>--noopt</b> flags on</li>
@@ -169,7 +225,7 @@
 
 					<section>
 						<h2>Timeline graph patterns</h2>
-						<div class="story">Analyze crime scene photos</div>
+						<div class="story bright">Analyze crime scene photos</div>
 						<div class="fragment" data-fragment-index="0">Memory get fully GC-ed</div>
 						<div class="fragment" data-fragment-index="0">
 							<img src="images/normal-memory.png"/>
@@ -182,7 +238,7 @@
 
 					<section>
 						<h2>Some notes on timeline recording</h2>
-						<div class="story"></div>
+						<div class="story bright"></div>
 						<ol>
 							<li class="fragment" data-fragment-index="0">GC has it's own strategies. You may want to leave the recording on idle state for few minutes to ensure GC</li>
 							<li class="fragment" data-fragment-index="1">Run App in production mode to simulate real environment</li>
@@ -193,7 +249,7 @@
 				<section data-transition="linear" data-background="#8c4738" data-background-transition="slide">
 					<section>
 						<h2>Detecting memory leaks causes</h2>
-						<div class="story">Pinpointing and arrest plan</div>
+						<div class="story bright">Pinpointing and arrest plan</div>
 						<ol>
 							<li class="fragment" data-fragment-index="0">Test App with a clean environment</li>
 							<li class="fragment" data-fragment-index="1">Choose a suspected scenraio</li>
@@ -210,7 +266,7 @@
 
 					<section>
 						<h2>Analyzing results</h2>
-						<div class="story">Interrogate suspects</div>
+						<div class="story bright">Interrogate suspects</div>
 						<ul>
 							<li class="fragment" data-fragment-index="0">Retaining tree is a reverse pyramid of references</li>
 							<li class="fragment" data-fragment-index="1">Entries with red background - Detached elements</li>
@@ -224,7 +280,7 @@
 
 					<section>
 						<h2>Fixing and validating</h2>
-						<div class="story">Bring'em to trial</div>
+						<div class="story bright">Bring'em to trial</div>
 						<ul>
 							<li class="fragment" data-fragment-index="0">Recognize your place in code using clues from the retaining tree. Issue should be somewhere between the red and the yellow entries</li>
 							<li class="fragment" data-fragment-index="1">Review suspected code</li>
@@ -234,7 +290,7 @@
 
 					<section>
 						<h2>Some notes on profiling</h2>
-						<div class="story">Debriefing</div>
+						<div class="story bright">Debriefing</div>
 						<ol>
 							<li class="fragment" data-fragment-index="0">Each snapshot starts with a garbage collecting. No need to force it</li>
 							<li class="fragment" data-fragment-index="1">Name closure functions. They will help you get around the retaining tree<br/>
@@ -266,16 +322,16 @@
 					</ul>
 				</section>
 
-				<section data-transition="linear" data-background="#33aa22" data-background-transition="slide">
+				<section data-transition="linear" data-background="#88aa77" data-background-transition="slide">
 					<section>
 						<h2>Memory leaks in Angular.JS directives</h2>
-						<div class="story">The real deal</div>
+						<div class="story bright">The real deal</div>
 						<h3>What we should do when scope has to die</h3>
 					</section>
 
 					<section>
 						<h2>Directives - release event listeners</h2>
-						<div class="story">First arrest</div>
+						<div class="story bright">First arrest</div>
 						<ul>
 							<li>Unbind any event listeners that are registered on DOM elements, global objects or inside closure</li>
 							<li>Use scope $destroy event which is broadcasted prior to scope destruction</li>
@@ -301,7 +357,7 @@ function johnGottiDirective () {
 
 					<section>
 						<h2>Directives - release DOM trees</h2>
-						<div class="story">Second arrest</div>
+						<div class="story bright">Second arrest</div>
 						<ul>
 							<li>Release any reference to detached DOM trees</li>
 							<li>Use scope $destroy event which is broadcasted prior to scope destruction</li>
@@ -331,7 +387,7 @@ function alCaponeDirective () {
 
 					<section>
 						<h2>Directives - stop any running interval</h2>
-						<div class="story">Third arrest</div>
+						<div class="story bright">Third arrest</div>
 						<ul>
 							<li>If using <code>setInterval</code>, release on $destroy event</li>
 							<li>Use of $interval service does not save you the manual destruction of the interval</li>
@@ -356,7 +412,7 @@ function tedBundyDirective ($interval) {
 
 					<section>
 						<h2>Directives - elements created with jQuery</h2>
-						<div class="story">Forth arrest</div>
+						<div class="story bright">Forth arrest</div>
 						<ul>
 							<li>Should be removed with jQuery alone</li>
 							<li>Removing with DOM api, will leave jQuery cache object in memory</li>
@@ -386,13 +442,21 @@ function leeHarveyOswaldDirective () {
 				<section data-transition="linear" data-background="#224488" data-background-transition="slide">
 					<section>
 						<h2>Surprising profiling results</h2>
-						<div class="story">Another suspect</div>
+						<div class="story bright">Other suspects</div>
 						<ul>
-							<li>ng-if directive</li>
-							<li>ng-switch directive</li>
-							<li>ng-include directive</li>
-						</ul><br/><br/>
-						<div class="fragment" data-fragment-index="0">All of the above are not memory leaks but may be optimized</div>
+							<li class="fragment" data-fragment-index="0">ng-if, ng-switch, ng-include directives</li>
+							<li class="fragment" data-fragment-index="1">Appear in many profiling report entries</li>
+							<li class="fragment" data-fragment-index="2">Not a memory leak but should be optimized</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Bind once</h2>
+						<div class="story bright">Don't let them see you</div>
+						<ul>
+							<li class="fragment" data-fragment-index="0">bo-if directive</li>
+							<li class="fragment" data-fragment-index="1">ui-router instead of ng-if fragments</li>
+						</ul>
 					</section>
 					
 				</section>
@@ -401,7 +465,7 @@ function leeHarveyOswaldDirective () {
 					<section>
 						<h2>Thank you!</h2>
 						<ul>
-							<li>Presentation slides online: <a href="http://slides.com/eshcharc/private-leaking-investigation">http://slides.com/eshcharc/private-leaking-investigation</a></li>
+							<li>Presentation slides online: <a href="http://slides.com/cheneshchar/private-leaking-investigation">http://slides.com/cheneshchar/private-leaking-investigation</a></li>
 							<li>Memory leaking playground (crime scene): <a href="https://github.com/eshcharc/private-leaking-investigation">https://github.com/eshcharc/private-leaking-investigation</a></li>
 							<li>Questions: <a href="mailto:eshcharc@gmail.com">eshcharc@gmail.com</a></li>
 						</ul><br/><br/>
