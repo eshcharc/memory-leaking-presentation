@@ -342,7 +342,7 @@
 
 function alCaponeDirective ($window) {
 	return {
-	    link: function (scope, element, attrs) {
+	    link: function alCaponeLink(scope, element, attrs) {
 	    	console.log($window.alCaponeTreasure)
 	    	if(!$window.alCaponeTreasure) {
 	    		$window.alCaponeTreasure = [];
@@ -371,7 +371,7 @@ function alCaponeDirective ($window) {
 						<pre>
 							<code data-trim contenteditable>
 function timeBombDirective () {
-    return function (scope, element, attrs) {
+    return function timeBombLink(scope, element, attrs) {
     	function setTimeBomb() {
 			element.dataPicker();
 		}
@@ -397,16 +397,23 @@ function timeBombDirective () {
 						<pre>
 							<code data-trim contenteditable>
 function tedBundyDirective ($interval) {
+	var Body = function () { 
+		// define person 
+	};
 
-    return function (scope, element, attrs) {
-    	var killingInterval = $interval(function kill(robbery) {
-			// kill
-		});
+    return {
+    	link: function tedBundyLink(scope, element, attrs) {
+    		var bodies = [];
 
-    	scope.$on('$destroy', function arrestTedBundy() {
-    		$interval.cancel(killingInterval);
-    	})
-    };
+	    	var killingInterval = $interval(function kill() {
+	    		bodies.push(new Body());
+			}, 50);
+
+	    	scope.$on('$destroy', function arrestTedBundy() {
+	    		//$interval.cancel(killingInterval);
+	    	})
+	    }
+	};
 }
 							</code>
 						</pre>
@@ -424,14 +431,15 @@ function tedBundyDirective ($interval) {
 function leeHarveyOswaldDirective () {
 	var bullet;
 
-    return function (scope, element, attrs) {
+    return function leeHarveyLink(scope, element, attrs) {
     	bullet = angular.element('&lt;bullet&gt;');
+
+    	element.append(bullet);
 
     	// shoot
 
     	scope.$on('$destroy', function arrestLeeHarvey() {
     		bullet.remove();
-    		bullet = null;
     	})
     };
 }
@@ -441,7 +449,7 @@ function leeHarveyOswaldDirective () {
 				</section>
 
 
-				<section data-transition="linear" data-background="#224488" data-background-transition="slide">
+				<section data-transition="linear" data-background="#778888" data-background-transition="slide">
 					<section>
 						<h2>Surprising profiling results</h2>
 						<div class="story bright">Other suspects</div>
@@ -454,7 +462,7 @@ function leeHarveyOswaldDirective () {
 
 					<section>
 						<h2>Bind once</h2>
-						<div class="story bright">Don't let them see you</div>
+						<div class="story bright">Make one contact</div>
 						<ul>
 							<li class="fragment" data-fragment-index="0">bo-if directive</li>
 							<li class="fragment" data-fragment-index="1">ui-router instead of ng-if fragments</li>
