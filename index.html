@@ -270,7 +270,7 @@
 						<ul>
 							<li class="fragment" data-fragment-index="0">Retaining tree is a reverse pyramid of references</li>
 							<li class="fragment" data-fragment-index="1">Entries with red background - Detached elements</li>
-							<li class="fragment" data-fragment-index="2">Entries with yellow background further up the retaining tree - objects with a reference to GC root</li>
+							<li class="fragment" data-fragment-index="2">Entries with yellow background - objects with a reference to GC root</li>
 							<li class="fragment" data-fragment-index="3">Distance column - distance to root</li> 
 						</ul><br/><br/>
 						<div>
@@ -322,62 +322,64 @@
 					</ul>
 				</section>
 
-				<section data-transition="linear" data-background="#88aa77" data-background-transition="slide">
+				<section data-transition="linear" data-background="#88aa77" data-background-transition="slide">		
+
 					<section>
 						<h2>Memory leaks in Angular.JS directives</h2>
-						<div class="story bright">The real deal</div>
+						<div class="story bright">A bit of action!</div>
 						<h3>What we should do when scope has to die</h3>
 					</section>
 
 					<section>
-						<h2>Directives - release event listeners</h2>
+						<h2>Directives - release DOM trees</h2>
 						<div class="story bright">First arrest</div>
 						<ul>
-							<li>Unbind any event listeners that are registered on DOM elements, global objects or inside closure</li>
-							<li>Use scope $destroy event which is broadcasted prior to scope destruction</li>
+							<li>Release any reference to detached DOM trees</li>
+							<li>Use scope $destroy event, prior to scope destruction</li>
 						</ul>
 						<pre>
 							<code data-trim contenteditable>
-function johnGottiDirective () {
-    return function (scope, element, attrs) {
-    	function stealMerchandise() {
-			// Do some stealling
-		}
 
-    	element.on('click', stealMerchandise);
+function alCaponeDirective ($window) {
+	return {
+	    link: function (scope, element, attrs) {
+	    	console.log($window.alCaponeTreasure)
+	    	if(!$window.alCaponeTreasure) {
+	    		$window.alCaponeTreasure = [];
+	    	}
 
-    	scope.$on('$destroy', function arrestJohnGotti() {
-    		element.off('click', stealMerchandise);
-    	})
-    };
+	    	$window.alCaponeTreasure.push($window.document.createElement('div'));
+	    	$window.alCaponeTreasure.push($window.document.createElement('div'));
+
+	    	scope.$on('$destroy', function findCaponeTreasure() {
+	            $window.alCaponeTreasure = null;
+	        });
+	    }
+	};
 }
 							</code>
 						</pre>
-					</section>
+					</section> 
 
 					<section>
-						<h2>Directives - release DOM trees</h2>
+						<h2>Directives - destroy third party plugins</h2>
 						<div class="story bright">Second arrest</div>
 						<ul>
-							<li>Release any reference to detached DOM trees</li>
-							<li>Use scope $destroy event which is broadcasted prior to scope destruction</li>
+							<li>Use plugin API to remove/destroy plugin</li>
+							<li>Fixed jQueryUI bug - datepicker_instActive</li>
 						</ul>
 						<pre>
 							<code data-trim contenteditable>
-function alCaponeDirective () {
-	var treasure = [];
-
+function timeBombDirective () {
     return function (scope, element, attrs) {
-    	function storeRobbedMoney(robbery) {
-			treasure.push(robbery)
+    	function setTimeBomb() {
+			element.dataPicker();
 		}
 
-    	angular.forEach(element.children('.robbery'), function (robbery) {
-    		storeRobbedMoney(robbery);
-    	});
+    	setTimeBomb();
 
-    	scope.$on('$destroy', function findAlCaponeTreasure() {
-    		treasue = null;
+    	scope.$on('$destroy', function neutralizeTimeBomb() {
+    		element.dataPicker('destroy');
     	})
     };
 }
