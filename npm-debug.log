@@ -1,0 +1,89 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.35
+4 verbose node symlink /usr/bin/node
+5 verbose readDependencies using package.json deps
+6 verbose install where, deps [ '/home/yanshufim/webbsites/memory-leaking-presentation',
+6 verbose install   [ 'underscore',
+6 verbose install     'express',
+6 verbose install     'mustache',
+6 verbose install     'socket.io',
+6 verbose install     'grunt-contrib-qunit',
+6 verbose install     'grunt-contrib-jshint',
+6 verbose install     'grunt-contrib-cssmin',
+6 verbose install     'grunt-contrib-uglify',
+6 verbose install     'grunt-contrib-watch',
+6 verbose install     'grunt-contrib-sass',
+6 verbose install     'grunt-contrib-connect',
+6 verbose install     'grunt-zip',
+6 verbose install     'grunt' ] ]
+7 info preinstall reveal.js@2.6.2
+8 verbose readDependencies using package.json deps
+9 verbose already installed skipping underscore@~1.5.1 /home/yanshufim/webbsites/memory-leaking-presentation
+10 verbose already installed skipping express@~2.5.9 /home/yanshufim/webbsites/memory-leaking-presentation
+11 verbose already installed skipping mustache@~0.7.2 /home/yanshufim/webbsites/memory-leaking-presentation
+12 verbose already installed skipping socket.io@~0.9.13 /home/yanshufim/webbsites/memory-leaking-presentation
+13 verbose already installed skipping grunt-contrib-qunit@~0.2.2 /home/yanshufim/webbsites/memory-leaking-presentation
+14 verbose already installed skipping grunt-contrib-jshint@~0.6.4 /home/yanshufim/webbsites/memory-leaking-presentation
+15 verbose already installed skipping grunt-contrib-cssmin@~0.4.1 /home/yanshufim/webbsites/memory-leaking-presentation
+16 verbose already installed skipping grunt-contrib-uglify@~0.2.4 /home/yanshufim/webbsites/memory-leaking-presentation
+17 verbose already installed skipping grunt-contrib-watch@~0.5.3 /home/yanshufim/webbsites/memory-leaking-presentation
+18 verbose already installed skipping grunt-contrib-sass@~0.5.0 /home/yanshufim/webbsites/memory-leaking-presentation
+19 verbose already installed skipping grunt-contrib-connect@~0.4.1 /home/yanshufim/webbsites/memory-leaking-presentation
+20 verbose already installed skipping grunt-zip@~0.7.0 /home/yanshufim/webbsites/memory-leaking-presentation
+21 verbose already installed skipping grunt@~0.4.0 /home/yanshufim/webbsites/memory-leaking-presentation
+22 silly resolved []
+23 info build /home/yanshufim/webbsites/memory-leaking-presentation
+24 verbose linkStuff [ false, false, false, '/home/yanshufim/webbsites' ]
+25 info linkStuff reveal.js@2.6.2
+26 verbose linkBins reveal.js@2.6.2
+27 verbose linkMans reveal.js@2.6.2
+28 verbose rebuildBundles reveal.js@2.6.2
+29 verbose rebuildBundles [ '.bin',
+29 verbose rebuildBundles   'express',
+29 verbose rebuildBundles   'grunt',
+29 verbose rebuildBundles   'grunt-cli',
+29 verbose rebuildBundles   'grunt-contrib-connect',
+29 verbose rebuildBundles   'grunt-contrib-cssmin',
+29 verbose rebuildBundles   'grunt-contrib-jshint',
+29 verbose rebuildBundles   'grunt-contrib-qunit',
+29 verbose rebuildBundles   'grunt-contrib-sass',
+29 verbose rebuildBundles   'grunt-contrib-uglify',
+29 verbose rebuildBundles   'grunt-contrib-watch',
+29 verbose rebuildBundles   'grunt-zip',
+29 verbose rebuildBundles   'mustache',
+29 verbose rebuildBundles   'socket.io',
+29 verbose rebuildBundles   'underscore' ]
+30 verbose rebuild bundle /home/yanshufim/webbsites/memory-leaking-presentation/node_modules/grunt-cli
+31 info build /home/yanshufim/webbsites/memory-leaking-presentation/node_modules/grunt-cli
+32 info preinstall grunt-cli@0.1.13
+33 verbose linkStuff [ false,
+33 verbose linkStuff   false,
+33 verbose linkStuff   false,
+33 verbose linkStuff   '/home/yanshufim/webbsites/memory-leaking-presentation/node_modules' ]
+34 info linkStuff grunt-cli@0.1.13
+35 warn prefer global grunt-cli@0.1.13 should be installed with -g
+36 verbose linkBins grunt-cli@0.1.13
+37 verbose link bins [ { grunt: 'bin/grunt' },
+37 verbose link bins   '/home/yanshufim/webbsites/memory-leaking-presentation/node_modules/.bin',
+37 verbose link bins   false ]
+38 verbose linkMans grunt-cli@0.1.13
+39 verbose rebuildBundles grunt-cli@0.1.13
+40 verbose rebuildBundles [ '.bin', 'findup-sync', 'nopt', 'resolve' ]
+41 error Error: EACCES, unlink '/home/yanshufim/webbsites/memory-leaking-presentation/node_modules/.bin/grunt'
+41 error  { [Error: EACCES, unlink '/home/yanshufim/webbsites/memory-leaking-presentation/node_modules/.bin/grunt']
+41 error   errno: 3,
+41 error   code: 'EACCES',
+41 error   path: '/home/yanshufim/webbsites/memory-leaking-presentation/node_modules/.bin/grunt' }
+42 error Please try running this command again as root/Administrator.
+43 error System Linux 3.5.0-54-generic
+44 error command "/usr/bin/node" "/usr/bin/npm" "install"
+45 error cwd /home/yanshufim/webbsites/memory-leaking-presentation
+46 error node -v v0.10.35
+47 error npm -v 1.4.28
+48 error path /home/yanshufim/webbsites/memory-leaking-presentation/node_modules/.bin/grunt
+49 error code EACCES
+50 error errno 3
+51 error stack Error: EACCES, unlink '/home/yanshufim/webbsites/memory-leaking-presentation/node_modules/.bin/grunt'
+52 verbose exit [ 3, true ]

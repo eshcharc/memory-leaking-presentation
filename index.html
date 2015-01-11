@@ -57,6 +57,11 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
+					<h2>Chen Eshchar - Web developer</h2>
+					<h2 style="color: #555599;">Opinya Solutions</h2>
+				</section>
+
+				<section>
 					<h1>My Private Leaking Investigation</h1>
 					<small>„It's a mystery to me, the game commences“</small><br/><br/>
 					<img src="images/detective.png" style="margin:0; background: none; border: none; box-shadow: none;" />
@@ -99,7 +104,7 @@
 								I get this when playing around with the application
 							</div><br/>
 							<div>
-								<img src="images/chrome-crash.png" style="height: 350px;"/>
+								<img src="images/chrome-crash.png" style="height: 450px;"/>
 							</div>
 						</div>
 					</section>
@@ -112,7 +117,7 @@
 								Application frequently halts for several seconds
 							</div><br/>
 							<div>
-								<img src="images/saw-touth.png" style="height: 350px;"/>
+								<img src="images/saw-touth.png" style="height: 450px;"/>
 							</div>
 						</div>
 					</section>
@@ -125,7 +130,7 @@
 								Boss instructs you to check for memory leaks 
 							</div><br/>
 							<div>
-								<img src="images/instructs.jpg" style="height: 350px;"/>
+								<img src="images/instructs.jpg" style="height: 450px;"/>
 							</div>
 						</div>
 					</section>
@@ -298,6 +303,19 @@
 							</li>
 						</ol>
 					</section>
+
+					<section>
+						<h2>Record heap allocation</h2>
+						<div class="story">Take another gun, just in case</div>
+						<div>
+							<div>
+								Memory snapshots over time 
+							</div><br/>
+							<div>
+								<img src="images/heap-allocation.png" style="height: 450px;"/>
+							</div>
+						</div>
+					</section>
 				</section>
 
 				<section>
@@ -305,7 +323,7 @@
 					<div class="story">Transfering to the big city</div>
 					<ul>
 						<li class="fragment" data-fragment-index="0">Complexity of code and coponents</li>
-						<li class="fragment" data-fragment-index="1">Multi develpers environment</li>
+						<li class="fragment" data-fragment-index="1">Multi developers environment</li>
 						<li class="fragment" data-fragment-index="2">Application may run days before refreshing the page</li> 
 						<li class="fragment" data-fragment-index="3">Detached application sections (ng-if)</li>
 					</ul>
@@ -316,7 +334,6 @@
 					<div class="story">Neighborhoods to watch</div>
 					<ul>
 						<li class="fragment" data-fragment-index="0">DOM manipulations in controllers (that's a no-no)</li>
-						<li class="fragment" data-fragment-index="1">Regular object growth - easy to track</li>
 						<li class="fragment" data-fragment-index="2">Angular "normal" detached DOM trees (ng-if, ng-include, ng-switch, etc.)</li>
 						<li class="fragment" data-fragment-index="3">Memory leaks in directives - our main interest</li>
 					</ul>
@@ -340,23 +357,25 @@
 						<pre>
 							<code data-trim contenteditable>
 
-function alCaponeDirective ($window) {
-	return {
-	    link: function alCaponeLink(scope, element, attrs) {
-	    	console.log($window.alCaponeTreasure)
-	    	if(!$window.alCaponeTreasure) {
-	    		$window.alCaponeTreasure = [];
-	    	}
+return function alCaponeLink(scope, element, attrs) {
+	if(!$window.alCaponeTreasure) {
+		$window.alCaponeTreasure = [];
+	}
 
-	    	$window.alCaponeTreasure.push($window.document.createElement('div'));
-	    	$window.alCaponeTreasure.push($window.document.createElement('div'));
+	(function perform100Robberies() {
+		var div,
+				i;
 
-	    	scope.$on('$destroy', function findCaponeTreasure() {
-	            $window.alCaponeTreasure = null;
-	        });
-	    }
-	};
-}
+		for(i = 0; i < 1000; i+=1) {
+			div = $window.document.createElement('div');
+			$window.alCaponeTreasure.push(div);
+		}
+	})();
+
+	scope.$on('$destroy', function findCaponeTreasure() {
+    $window.alCaponeTreasure = null; // <- This fixes the leak
+  });
+};
 							</code>
 						</pre>
 					</section> 
@@ -371,16 +390,14 @@ function alCaponeDirective ($window) {
 						<pre>
 							<code data-trim contenteditable>
 function timeBombDirective () {
-    return function timeBombLink(scope, element, attrs) {
-    	function setTimeBomb() {
-			element.dataPicker();
-		}
+    return function timeBombLnk(scope, element, attrs) {
+        (function setTimeBomb() {
+            element.datepicker();
+        })();
 
-    	setTimeBomb();
-
-    	scope.$on('$destroy', function neutralizeTimeBomb() {
-    		element.dataPicker('destroy');
-    	})
+        scope.$on('$destroy', function neutralizeTimeBomb() {
+            element.datepicker('destroy'); // <- This fixes the leak
+        });
     };
 }
 							</code>
@@ -391,8 +408,8 @@ function timeBombDirective () {
 						<h2>Directives - stop any running interval</h2>
 						<div class="story bright">Third arrest</div>
 						<ul>
-							<li>If using <code>setInterval</code>, release on $destroy event</li>
-							<li>Use of $interval service does not save you the manual destruction of the interval</li>
+							<li>Release <code>setInterval</code> on $destroy event</li>
+							<li>Manual destruction of the interval still needed with $interval</li>
 						</ul>
 						<pre>
 							<code data-trim contenteditable>
@@ -401,18 +418,16 @@ function tedBundyDirective ($interval) {
 		// define person 
 	};
 
-    return {
-    	link: function tedBundyLink(scope, element, attrs) {
-    		var bodies = [];
+  return function tedBundyLink(scope, element, attrs) {
+		var bodies = [];
 
-	    	var killingInterval = $interval(function kill() {
-	    		bodies.push(new Body());
-			}, 50);
+  	var killingInterval = $interval(function kill() {
+  		bodies.push(new Body());
+		}, 50);
 
-	    	scope.$on('$destroy', function arrestTedBundy() {
-	    		//$interval.cancel(killingInterval);
-	    	})
-	    }
+		scope.$on('$destroy', function arrestTedBundy() {
+			$interval.cancel(killingInterval); // <- This fixes the leak
+		})
 	};
 }
 							</code>
@@ -432,14 +447,15 @@ function leeHarveyOswaldDirective () {
 	var bullet;
 
     return function leeHarveyLink(scope, element, attrs) {
-    	bullet = angular.element('&lt;bullet&gt;');
+    	var bullet = angular.element('<bullet>');
 
     	element.append(bullet);
 
     	// shoot
 
     	scope.$on('$destroy', function arrestLeeHarvey() {
-    		bullet.remove();
+    		//element[0].removeChild(bullet[0]); // <- Will cause a leak
+    		bullet.remove(); // <- This fixes the leak
     	})
     };
 }
@@ -475,9 +491,9 @@ function leeHarveyOswaldDirective () {
 					<section>
 						<h2>Thank you!</h2>
 						<ul>
-							<li>Presentation slides online: <a href="http://slides.com/cheneshchar/private-leaking-investigation">http://slides.com/cheneshchar/private-leaking-investigation</a></li>
-							<li>Memory leaking playground (crime scene): <a href="https://github.com/eshcharc/private-leaking-investigation">https://github.com/eshcharc/private-leaking-investigation</a></li>
-							<li>Questions: <a href="mailto:eshcharc@gmail.com">eshcharc@gmail.com</a></li>
+							<li>Presentation slides online: <a href="https://cdn.rawgit.com/eshcharc/memory-leaking-presentation/master/index.html#/">https://cdn.rawgit.com/eshcharc/memory-leaking-presentation/master/index.html#/</a></li>
+							<li>Memory leaks playground (crime scene): <a href="https://github.com/eshcharc/private-leaking-investigation">https://github.com/eshcharc/private-leaking-investigation</a></li>
+							<li>Questions: <a href="mailto:chen@opinya.co.il">chen@opinya.co.il</a></li>
 						</ul><br/><br/>
 						
 					</section>
